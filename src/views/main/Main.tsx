@@ -182,7 +182,7 @@ const Main = ({ email }: StoreProps) => {
 	);
 };
 
-export default Main;
+export default connector(Main);
 
 let pickerStyles: PickerStyle = {
 	inputAndroid: {
