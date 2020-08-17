@@ -5,7 +5,7 @@ import { store } from "../store/configureStore";
 
 export let url = "https://eclass.bigappleacademy.com/driver";
 
-let configureAxios = () => {
+export let configureAxios = () => {
 	axios.interceptors.request.use((config) => {
 		config.headers = {
 			...config.headers,
@@ -28,7 +28,7 @@ export let requests = {
 			email: string | number
 		) =>
 			axios.post(
-				`${url}/apiupdate?attitude=${latitute}&longitude=${longitude}&routeId=${routeId}&email=${email}`
+				`${url}/apiupdate?latitude=${latitute}&longitude=${longitude}&routeId=${routeId}&email=${email}`
 			),
 	},
 };
