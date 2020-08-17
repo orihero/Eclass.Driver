@@ -20,9 +20,9 @@ let AppNavigator = ({ auth }: StoreProps) => {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator headerMode={"none"}>
-				{/* {!auth.access_token && (
+				{!auth.access_token && (
 					<Stack.Screen name={SCREENS.LOGIN} component={Login} />
-				)} */}
+				)}
 				<Stack.Screen name={SCREENS.MAIN} component={Main} />
 			</Stack.Navigator>
 		</NavigationContainer>
