@@ -14,6 +14,9 @@ import { requests } from "../../api/requests";
 import { RootState } from "../../store/reducers";
 import { connect, ConnectedProps } from "react-redux";
 import { USER_LOGGED_OUT } from "../../store/types";
+import Simple from "react-native-vector-icons/SimpleLineIcons";
+import { useNavigation } from "@react-navigation/native";
+import { SCREENS } from "../../constants";
 
 let regionIds: Item[] = [
 	{
@@ -73,12 +76,14 @@ type StoreProps = ConnectedProps<typeof connector>;
 const Main = ({ email, dispatch }: StoreProps) => {
 	const [routeId, setRouteId] = useState("");
 	const [sending, setSending] = useState(false);
+	let navigation = useNavigation();
 	let onStart = () => {
 		setSending(!sending);
 	};
 
 	let onLogoutPress = () => {
 		dispatch({ type: USER_LOGGED_OUT });
+		navigation.navigate(SCREENS.LOGIN);
 	};
 
 	useEffect(() => {
@@ -185,7 +190,7 @@ const Main = ({ email, dispatch }: StoreProps) => {
 				</Text>
 			</View>
 			<TouchableOpacity onPress={onLogoutPress} style={styles.row}>
-				<Icon name="exit" />
+				<Simple name="logout" color={"#999"} size={20} />
 				<Text style={styles.title}>LOGOUT</Text>
 			</TouchableOpacity>
 		</View>
