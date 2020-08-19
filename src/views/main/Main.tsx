@@ -136,7 +136,6 @@ const Main = ({ email, dispatch }: StoreProps) => {
 	return (
 		<View style={styles.container}>
 			<View style={{ flexDirection: "row", alignItems: "center" }}>
-				<Text style={styles.title}>SELECT ROUTE</Text>
 				<Picker
 					value={routeId}
 					onValueChange={(e) => setRouteId(e?.toString())}
@@ -154,7 +153,12 @@ const Main = ({ email, dispatch }: StoreProps) => {
 							color="#999"
 						/>
 					)}
-				/>
+				>
+					<Text style={styles.title}>
+						SELECT ROUTE {"  "}
+						{routeId || "--"}
+					</Text>
+				</Picker>
 			</View>
 			<View>
 				<View style={styles.center}>
@@ -211,7 +215,7 @@ let pickerStyles: PickerStyle = {
 		color: "#999",
 	},
 	viewContainer: {
-		width: 30,
+		width: 220,
 	},
 };
 

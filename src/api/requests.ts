@@ -28,7 +28,7 @@ export let requests = {
 			email: string | number
 		) =>
 			axios.post(
-				`${url}/apiupdate?latitude=${latitute}&longitude=${longitude}&routeId=${routeId}&email=${email}`
+				`${url}/apiupdate?latitude=${latitute}&longitude=${longitude}&route_id=${routeId}&email=${email}`
 			),
 	},
 };
