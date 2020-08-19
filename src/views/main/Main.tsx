@@ -13,6 +13,7 @@ import BackgroundGeolocation from "@mauron85/react-native-background-geolocation
 import { requests } from "../../api/requests";
 import { RootState } from "../../store/reducers";
 import { connect, ConnectedProps } from "react-redux";
+import { USER_LOGGED_OUT } from "../../store/types";
 
 let regionIds: Item[] = [
 	{
@@ -65,16 +66,21 @@ const mapStateToProps = ({ auth: { email } }: RootState) => ({ email });
 
 const mapDispatchToProps = {};
 
-let connector = connect(mapStateToProps, mapDispatchToProps);
+let connector = connect(mapStateToProps);
 
 type StoreProps = ConnectedProps<typeof connector>;
 
-const Main = ({ email }: StoreProps) => {
+const Main = ({ email, dispatch }: StoreProps) => {
 	const [routeId, setRouteId] = useState("");
 	const [sending, setSending] = useState(false);
 	let onStart = () => {
 		setSending(!sending);
 	};
+
+	let onLogoutPress = () => {
+		dispatch({ type: USER_LOGGED_OUT });
+	};
+
 	useEffect(() => {
 		if (!sending) {
 			BackgroundGeolocation.stop();
@@ -178,6 +184,10 @@ const Main = ({ email }: StoreProps) => {
 					{!sending ? "START" : "STOP"}
 				</Text>
 			</View>
+			<TouchableOpacity onPress={onLogoutPress} style={styles.row}>
+				<Icon name="exit" />
+				<Text style={styles.title}>LOGOUT</Text>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -221,5 +231,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "#999",
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	row: {
+		flexDirection: "row",
 	},
 });
