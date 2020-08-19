@@ -83,7 +83,9 @@ const Main = ({ email, dispatch }: StoreProps) => {
 
 	let onLogoutPress = () => {
 		dispatch({ type: USER_LOGGED_OUT });
-		navigation.navigate(SCREENS.LOGIN);
+		setTimeout(() => {
+			navigation.navigate(SCREENS.LOGIN);
+		}, 1);
 	};
 
 	useEffect(() => {
