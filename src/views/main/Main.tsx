@@ -19,50 +19,97 @@ import Simple from "react-native-vector-icons/SimpleLineIcons";
 import { useNavigation } from "@react-navigation/native";
 import { SCREENS } from "../../constants";
 
+// Import BackgroundGeolocation + any optional interfaces
+import NewBackgroundGeolocation from "react-native-background-geolocation";
+
 let regionIds: Item[] = [
 	{
-		label: "1",
+		label: "Route 1",
 		value: "1",
 	},
 	{
-		label: "2",
+		label: "Route 2",
 		value: "2",
 	},
 	{
-		label: "3",
+		label: "Route 3",
 		value: "3",
 	},
 	{
-		label: "4",
+		label: "Route 4",
 		value: "4",
 	},
 	{
-		label: "5",
+		label: "Route 5",
 		value: "5",
 	},
 	{
-		label: "6",
+		label: "Route 6",
 		value: "6",
 	},
 	{
-		label: "7",
+		label: "Route 7",
 		value: "7",
 	},
 	{
-		label: "7",
-		value: "7",
-	},
-	{
-		label: "8",
+		label: "Route 8",
 		value: "8",
 	},
 	{
-		label: "9",
+		label: "Route 9",
 		value: "9",
 	},
 	{
-		label: "10",
+		label: "Route 10",
 		value: "10",
+	},
+	{
+		label: "Route 11",
+		value: "11",
+	},
+	{
+		label: "Route 14",
+		value: "14",
+	},
+	{
+		label: "Route 15",
+		value: "15",
+	},
+	{
+		label: "Route 16",
+		value: "16",
+	},
+	{
+		label: "Route 17",
+		value: "17",
+	},
+	{
+		label: "Route 19",
+		value: "19",
+	},
+	{
+		label: "Route 26",
+		value: "26",
+	},
+	{
+		label: "Route 27",
+		value: "27",
+	},
+	{
+		label: "Route 28",
+		value: "28",
+	},
+	{
+		label: "SI Staten Island",
+		value: "SI",
+	},
+	{
+		label: "Queens",
+		value: "Q",
+	},
+	{
+		label: "Route 31",
+		value: "31",
 	},
 ];
 
@@ -79,6 +126,10 @@ const Main = ({ email, dispatch }: StoreProps) => {
 	const [sending, setSending] = useState(false);
 	let navigation = useNavigation();
 	let onStart = () => {
+		if (!routeId) {
+			Alert.alert("Attention", "Please select the route");
+			return;
+		}
 		setSending(!sending);
 	};
 
@@ -89,7 +140,7 @@ const Main = ({ email, dispatch }: StoreProps) => {
 		}, 1);
 	};
 
-	useEffect(() => {
+	let mauron = () => {
 		if (!sending) {
 			BackgroundGeolocation.stop();
 		} else {
@@ -103,9 +154,9 @@ const Main = ({ email, dispatch }: StoreProps) => {
 				startOnBoot: false,
 				stopOnTerminate: true,
 				locationProvider: BackgroundGeolocation.ACTIVITY_PROVIDER,
-				interval: 10000,
-				fastestInterval: 10000,
-				activitiesInterval: 10000,
+				interval: 5000,
+				fastestInterval: 5000,
+				activitiesInterval: 5000,
 				stopOnStillActivity: false,
 				saveBatteryOnBackground: false,
 			});
@@ -114,12 +165,14 @@ const Main = ({ email, dispatch }: StoreProps) => {
 				// handle your locations here
 				// to perform long running operation on iOS
 				// you need to create background task
+				console.log("GOT THE LOCATION");
 				try {
 					requests.main
 						.updateLocation(
 							location.latitude,
 							location.longitude,
-							routeId
+							routeId,
+							email
 						)
 						.then((res) => {
 							console.log({ status: res.status });
@@ -162,6 +215,7 @@ const Main = ({ email, dispatch }: StoreProps) => {
 
 			BackgroundGeolocation.on("background", () => {
 				console.log("[INFO] App is in background");
+				// BackgroundGeolocation.start();
 			});
 
 			BackgroundGeolocation.on("foreground", () => {
@@ -203,7 +257,96 @@ const Main = ({ email, dispatch }: StoreProps) => {
 				}
 			});
 		}
+	};
+
+	let onLocation = (location) => {
+		try {
+			console.log({ email });
+
+			requests.main
+				.updateLocation(
+					location.latitude,
+					location.longitude,
+					routeId,
+					email
+				)
+				.then((res) => {
+					console.log({ status: res.status });
+				});
+		} catch (error) {
+			console.log(error);
+			console.log(error.response);
+		}
+	};
+
+	let onError = (error) => {
+		console.warn(error);
+	};
+
+	let transfir = () => {
+		// This handler fires whenever bgGeo receives a location update.
+		NewBackgroundGeolocation.onLocation(onLocation, onError);
+
+		// This handler fires when movement states changes (stationary->moving; moving->stationary)
+		// NewBackgroundGeolocation.onMotionChange(this.onMotionChange);
+
+		// This event fires when a change in motion activity is detected
+		// NewBackgroundGeolocation.onActivityChange(this.onActivityChange);
+
+		// This event fires when the user toggles location-services authorization
+		// NewBackgroundGeolocation.onProviderChange(this.onProviderChange);
+		////
+		// 2.  Execute #ready method (required)
+		//
+		NewBackgroundGeolocation.ready(
+			{
+				reset: true,
+				// Geolocation Config
+				desiredAccuracy: NewBackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+				distanceFilter: 10,
+				// Activity Recognition
+				stopTimeout: 1,
+				// Application config
+				debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+				logLevel: NewBackgroundGeolocation.LOG_LEVEL_VERBOSE,
+				stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
+				// startOnBoot: true, // <-- Auto start tracking when device is powered-up.
+				// HTTP / SQLite config
+				// url: "http://yourserver.com/locations",
+				batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+				autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
+				// headers: {
+				// 	// <-- Optional HTTP headers
+				// 	"X-FOO": "bar",
+				// },
+				// params: {
+				// 	// <-- Optional HTTP params
+				// 	auth_token:
+				// 		"maybe_your_server_authenticates_via_token_YES?",
+				// },
+			},
+			(state) => {
+				console.log(
+					"- BackgroundGeolocation is configured and ready: ",
+					state.enabled
+				);
+
+				if (!state.enabled) {
+					////
+					// 3. Start tracking!
+					//
+					NewBackgroundGeolocation.start(function () {
+						console.log("- Start success");
+					});
+				}
+			}
+		);
+	};
+
+	useEffect(() => {
+		mauron();
 	}, [sending]);
+
 	return (
 		<View style={styles.container}>
 			<View style={{ flexDirection: "row", alignItems: "center" }}>
