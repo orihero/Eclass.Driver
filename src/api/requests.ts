@@ -24,11 +24,10 @@ export let requests = {
 		updateLocation: (
 			latitute: string | number,
 			longitude: string | number,
-			routeId: string | number,
-			email: string | number
+			routeId: string | number
 		) =>
 			axios.post(
-				`${url}/apiupdate?latitude=${latitute}&longitude=${longitude}&route_id=${routeId}&email=${email}`
+				`${url}/apiupdate?latitude=${latitute}&longitude=${longitude}&route_id=${routeId}`
 			),
 	},
 };
